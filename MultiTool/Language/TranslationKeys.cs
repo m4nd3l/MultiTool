@@ -1,0 +1,73 @@
+﻿namespace MultiTool.Language;
+
+public class TranslationKeys {
+    public static readonly Key MAIN_MENU = new Key("MultiTool");
+    
+    public static readonly Key UTILS_MENU = new Key("Utils");
+    public static readonly Key CHATBOT_UTILS = new Key("Chatbot");
+    public static readonly Key TEXT_CONVERTER_UTILS = new Key("TextConverter");
+    public static readonly Key HASH_GENERATOR_UTILS = new Key("HashGenerator");
+    public static readonly Key REGEX_TESTER_UTILS = new Key("RegexTester");
+    public static readonly Key TIME_UTILITIES_UTILS = new Key("TimeUtilities");
+    
+    public static readonly Key SYSTEM_MENU = new Key("System");
+    public static readonly Key PROCESS_MONITOR_SYSTEM = new Key("ProcessMonitor");
+    public static readonly Key HARDWARE_FETCHER_SYSTEM = new Key("HardwareFetcher");
+    public static readonly Key ENVIRONMENT_CHECKER_SYSTEM = new Key("EnvironmentChecker");
+    public static readonly Key UPTIME_TRACKER_SYSTEM = new Key("UptimeTracker");
+    
+    public static readonly Key STORAGE_MENU = new Key("Storage");
+    public static readonly Key DISK_USER_ANALYZER_STORAGE = new Key("DiskUserAnalyzer");
+    public static readonly Key DUPLICATE_FILE_FINDER_STORAGE = new Key("DuplicateFileFinder");
+    public static readonly Key FILE_SHREDDER_STORAGE = new Key("FileShredder");
+    public static readonly Key DIRECTORY_TREE_STORAGE = new Key("DirectoryTree");
+    public static readonly Key FILE_MANIPULATION_STORAGE = new Key("FileManipulation");
+    
+    public static readonly Key NETWORK_MENU = new Key("Network");
+    public static readonly Key API_PLAYGROUND_NETWORK = new Key("ApiPlayground");
+    public static readonly Key PORT_SCANNER_NETWORK = new Key("PortScanner");
+    public static readonly Key IP_GEOLOCATOR_NETWORK = new Key("IpGeolocator");
+    public static readonly Key PING_SPEED_TEST_NETWORK = new Key("PingSpeedTest");
+    public static readonly Key DNS_LOOKUP_NETWORK = new Key("DnsLookup");
+    
+    public static readonly Key DIAGNOSTICS_MENU = new Key("Diagnostics");
+    public static readonly Key LOG_ANALYZER_DIAGNOSTICS = new Key("LogAnalyzer");
+    public static readonly Key MEMORY_LEAK_DETECTOR_DIAGNOSTICS = new Key("MemoryLeakDetector");
+    public static readonly Key PORT_CONFLICT_RESOLVER_DIAGNOSTICS = new Key("PortConflictResolver");
+    public static readonly Key CRASH_REPORTER_DIAGNOSTICS = new Key("CrashReporter");
+    public static readonly Key SFC_SCANNER_DIAGNOSTICS = new Key("SfcScanner");
+    
+    public static readonly Key EMERGENCY_MENU = new Key("Emergency");
+    public static readonly Key PROCESS_KILLER_EMERGENCY = new Key("ProcessKiller");
+    public static readonly Key RAM_FLUSHER_EMERGENCY = new Key("RamFlusher");
+    public static readonly Key BACKUP_RESTORER_EMERGENCY = new Key("BackupRestorer");
+    public static readonly Key NETWORK_RESETER_EMERGENCY = new Key("NetworkReseter");
+    
+    public static readonly Key HELP_MENU = new Key("Help");
+    public static readonly Key COMMAND_GUIDE_HELP = new Key("CommandGuide");
+    public static readonly Key ARGS_HELP = new Key("Args");
+    public static readonly Key VERSION_CHECKER_HELP = new Key("VersionChecker");
+    
+    public static readonly Key SETTINGS_MENU = new Key("Settings");
+    public static readonly Key LANGUAGE_SETTINGS = new Key("Language");
+    public static readonly Key API_KEYS_SETTINGS = new Key("ApiKeys");
+    public static readonly Key LOG_LEVEL_SETTINGS = new Key("LogLevel");
+    public static readonly Key RESET_FACTORY_SETTINGS = new Key("ResetFactory");
+    public static readonly Key BACKUP_SETTINGS = new Key("Backup");
+    public static readonly Key LOAD_SETTINGS = new Key("Load");
+    
+    public static readonly Key EXIT = new Key("Exit");
+    
+    public static readonly Key BACK = new Key("Back");
+
+    public static readonly Key EXIT_TO_CLOSE_CHATBOT = new Key("ExitToClose");
+    public static readonly Key YOU_CHATBOT = new Key("You");
+    public static readonly Key NULL_OR_EMPTY_PROMPT_CHATBOT = new Key("NullOrEmptyPrompt");
+}
+
+public class Key {
+    private string key;
+    public Key(string key) { this.key = key; }
+    public string getKey() => key;
+    public override string ToString() => key;
+}

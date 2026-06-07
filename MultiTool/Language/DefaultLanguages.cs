@@ -1,0 +1,62 @@
+﻿namespace MultiTool.Language;
+
+public class DefaultLanguages {
+    public static readonly string ENGLISH = """
+{
+  "name": "English",
+  "keys": {
+    "MultiTool": "MultiTool",
+    "Utils": "Utilities",
+    "Chatbot": "AI Chatbot",
+    "TextConverter": "Text Converter",
+    "HashGenerator": "Cryptographic Hash Generator",
+    "RegexTester": "Regular Expression Tester",
+    "TimeUtilities": "Time & Date Utilities",
+    "System": "System Information",
+    "ProcessMonitor": "Process Monitor",
+    "HardwareFetcher": "Hardware Specification Fetcher",
+    "EnvironmentChecker": "Environment Variables & Runtime",
+    "UptimeTracker": "System Uptime Tracker",
+    "Storage": "Storage Management",
+    "DiskUserAnalyzer": "Disk Space Analyzer",
+    "DuplicateFileFinder": "Duplicate File Finder",
+    "FileShredder": "Secure File Shredder",
+    "DirectoryTree": "Directory Structure Tree",
+    "FileManipulation": "File System Operations",
+    "Network": "Network Connectivity",
+    "ApiPlayground": "HTTP API Client Playground",
+    "PortScanner": "Network Port Scanner",
+    "IpGeolocator": "IP Address Geolocation",
+    "PingSpeedTest": "Latency & Speed Test",
+    "DnsLookup": "DNS Record Lookup",
+    "Diagnostics": "System Diagnostics",
+    "LogAnalyzer": "Application Log Analyzer",
+    "MemoryLeakDetector": "Process Memory Leak Detector",
+    "PortConflictResolver": "Network Port Conflict Resolver",
+    "CrashReporter": "Isolated Crash Reporter",
+    "SfcScanner": "System File Integrity Scanner",
+    "Emergency": "Rapid Recovery & Cleanup",
+    "ProcessKiller": "Forceful Process Terminator",
+    "RamFlusher": "Standby RAM Flusher",
+    "BackupRestorer": "Configuration Backup Restorer",
+    "NetworkReseter": "Network Adapter Reset Tool",
+    "Help": "Help",
+    "CommandGuide": "Interactive Command Manual",
+    "Args": "CLI Arguments & Switches",
+    "VersionChecker": "Build Version & Credits",
+    "Settings": "Configuration Settings",
+    "Language": "Display Language Settings",
+    "ApiKeys": "API Authentication Keys",
+    "LogLevel": "Logging Verbosity Threshold",
+    "ResetFactory": "Factory Default Reset",
+    "Backup": "Backup Current Settings",
+    "Load": "Load Saved Settings",
+    "Exit": "Exit",
+    "Back": "Back",
+    "ExitToClose": "Type 'exit' to close the chatbot session",
+    "You": "You",
+    "NullOrEmptyPrompt": "Null or empty prompt is not valid, please try again"
+  }
+}
+""";
+}

@@ -1,7 +1,8 @@
 ﻿using Spectre.Console;
 
-namespace MultiTool.Tools;
+namespace MultiTool.ToolUIs;
 
-public interface Frame {
-    void clear() { AnsiConsole.Clear(); }
+public interface Frame { 
+    abstract void render();
+    public void clear() { AnsiConsole.Clear(); }
 }
