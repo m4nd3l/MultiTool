@@ -23,4 +23,17 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Figgle" Version="0.6.6" />
+    <PackageReference Include="Figgle.Fonts" Version="0.6.6" />
+    <PackageReference Include="Figgle.Generator" Version="0.6.6" />
+    <PackageReference Include="Google.GenAI" Version="1.3.0" />
+    <PackageReference Include="Spectre.Console" Version="0.55.2" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.55.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ToolActions\" />
+  </ItemGroup>
+
 </Project>
