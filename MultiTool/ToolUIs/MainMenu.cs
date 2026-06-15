@@ -35,11 +35,11 @@ public class MainMenu : Frame {
             .AddChoices(options);
     }
     
-    public void render() {
+    public override void render() {
         AnsiConsole.Clear();
         title.render();
         AvailableToolMenu selected = AnsiConsole.Prompt(menu);
-        selected.getMenu().render();
+        selected.switchMenu();
         AnsiConsole.Clear();
     }
 }

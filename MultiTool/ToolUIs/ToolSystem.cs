@@ -1,4 +1,6 @@
-﻿namespace MultiTool.ToolUIs;
+﻿using System.Security.Cryptography;
+
+namespace MultiTool.ToolUIs;
 
 public class ToolSystem {
     private static Frame? currentFrame;
@@ -8,6 +10,12 @@ public class ToolSystem {
             currentFrame = null;
         }
 
-        AvailableTools.MAIN_MENU.getMenu().render();
+        AvailableTools.MAIN_MENU.switchMenu();
+    }
+
+    public static void changeFrame(Frame frame) {
+        currentFrame = frame;
+        currentFrame.clear();
+        currentFrame.render();
     }
 }

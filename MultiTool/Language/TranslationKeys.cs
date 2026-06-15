@@ -63,6 +63,10 @@ public class TranslationKeys {
     public static readonly Key EXIT_TO_CLOSE_CHATBOT = new Key("ExitToClose");
     public static readonly Key YOU_CHATBOT = new Key("You");
     public static readonly Key NULL_OR_EMPTY_PROMPT_CHATBOT = new Key("NullOrEmptyPrompt");
+    public static readonly Key API_KEY_NOT_FOUND_OR_VALID_CHATBOT = new Key("APIKeyNotFound");
+    public static readonly Key ASK_API_KEY_CHATBOT = new Key("ApiKeyQuestion");
+    public static readonly Key REQUEST_ERROR_CHATBOT = new Key("RequestError");
+    public static readonly Key LOADING_ANSWER_CHATBOT = new  Key("LoadingAnswer");
 }
 
 public class Key {

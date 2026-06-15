@@ -29,14 +29,12 @@ public class UtilsTool : Frame {
             .AddChoices(options);
     }
     
-    public void render() {
-        AnsiConsole.Clear();
+    public override void render() {
         title.render();
         AvailableTool selected = AnsiConsole.Prompt(menu);
         AvailableToolMenu selectedMenu;
-        if (selected is AvailableToolMenu) selectedMenu = (AvailableToolMenu)selected;
-        else selectedMenu                               = new AvailableToolMenu(TranslationKeys.BACK, new MainMenu());
-        AnsiConsole.Clear();
-        selectedMenu.getMenu().render();
+        if (selected is AvailableToolMenu) selectedMenu = (AvailableToolMenu) selected;
+        else selectedMenu                               = AvailableTools.MAIN_MENU;
+        selectedMenu.switchMenu();
     }
 }

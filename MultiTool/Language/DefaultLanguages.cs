@@ -55,7 +55,11 @@ public class DefaultLanguages {
     "Back": "Back",
     "ExitToClose": "Type 'exit' to close the chatbot session",
     "You": "You",
-    "NullOrEmptyPrompt": "Null or empty prompt is not valid, please try again"
+    "NullOrEmptyPrompt": "Null or empty prompt is not valid, please try again",
+    "APIKeyNotFound": "API Key Not Found",
+    "ApiKeyQuestion": "What is your API Key?",
+    "RequestError": "There has been an error.",
+    "LoadingAnswer": "Loading..."
   }
 }
 """;
