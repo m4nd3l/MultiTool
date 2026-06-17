@@ -6,7 +6,7 @@ namespace MultiTool;
 public class MultiToolSaving {
     private static readonly string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\MultiTool";
     private static readonly string filePath = Path.Combine(path, "settings");
-    private static readonly string languagesDirectoryPath = Path.Combine(path, "languages");
+    public static readonly string chatHistoryDirectoryPath = Path.Combine(path, "chatbot_history");
     private static Dictionary<string, object> settings = new Dictionary<string, object>();
 
     public static void init() {
@@ -16,7 +16,9 @@ public class MultiToolSaving {
         }
         settings = new();
         string directory = Path.GetDirectoryName(filePath);
+        string chatHistoryDirectory = Path.GetDirectoryName(chatHistoryDirectoryPath);
         if (!string.IsNullOrEmpty(directory)) Directory.CreateDirectory(directory);
+        if (!string.IsNullOrEmpty(chatHistoryDirectory)) Directory.CreateDirectory(chatHistoryDirectory);
         if (File.Exists(filePath)) return;
         File.Create(filePath).Close();
         File.WriteAllText(filePath, "{}");

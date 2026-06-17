@@ -5,20 +5,17 @@ using System.Text.RegularExpressions;
 namespace MultiTool.UI;
 
 public class SentMessage {
-    private string sender;
+    private string sender, rawMessage;
     private List<IRenderable> message;
-    private Color senderColor, messageColor;
-
-    public SentMessage(string sender, List<IRenderable> message) : this(sender, Color.Gray, message) {  }
-    public SentMessage(string sender, ConsoleColor senderColor, List<IRenderable> message) : this(sender, Color.FromConsoleColor(senderColor), message, Color.Gray) {  }
-    public SentMessage(string sender, ConsoleColor senderColor, List<IRenderable> message, ConsoleColor messageColor)
-        : this(sender, Color.FromConsoleColor(senderColor), message, Color.FromConsoleColor(messageColor)) {  }
-    public SentMessage(string sender, Color senderColor, List<IRenderable> message) : this(sender, senderColor, message, Color.Gray) {  }
-    public SentMessage(string sender, Color senderColor, List<IRenderable> message, Color messageColor) {
+    private Color senderColor;
+    
+    public SentMessage(string sender, ConsoleColor senderColor, List<IRenderable> message, string rawMessage) 
+        : this(sender, Color.FromConsoleColor(senderColor), message, rawMessage) {  }
+    public SentMessage(string sender, Color senderColor, List<IRenderable> message, string rawMessage) {
         this.sender       = sender;
-        this.message      = message;
         this.senderColor  = senderColor;
-        this.messageColor = messageColor;
+        this.message      = message;
+        this.rawMessage = rawMessage;
     }
 
     public void render() {
@@ -30,4 +27,5 @@ public class SentMessage {
     
     public string getSender() => sender;
     public List<IRenderable> getMessage() => message;
+    public string getRawMessage() => rawMessage;
 }

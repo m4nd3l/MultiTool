@@ -61,12 +61,19 @@ public class TranslationKeys {
     public static readonly Key BACK = new Key("Back");
 
     public static readonly Key EXIT_TO_CLOSE_CHATBOT = new Key("ExitToClose");
+    public static readonly Key COMMANDS_CHATBOT = new Key("CommandsChatbot");
     public static readonly Key YOU_CHATBOT = new Key("You");
     public static readonly Key NULL_OR_EMPTY_PROMPT_CHATBOT = new Key("NullOrEmptyPrompt");
     public static readonly Key API_KEY_NOT_FOUND_OR_VALID_CHATBOT = new Key("APIKeyNotFound");
     public static readonly Key ASK_API_KEY_CHATBOT = new Key("ApiKeyQuestion");
     public static readonly Key REQUEST_ERROR_CHATBOT = new Key("RequestError");
     public static readonly Key LOADING_ANSWER_CHATBOT = new  Key("LoadingAnswer");
+    public static readonly Key SAVE_COMMAND_CHATBOT = new  Key("LoadCommand");
+    public static readonly Key LOAD_COMMAND_CHATBOT = new  Key("SaveCommand");
+    public static readonly Key LIST_COMMAND_CHATBOT = new  Key("ListCommand");
+    public static readonly Key NO_CHAT_SAVED_CHATBOT = new  Key("NoChatSaved");
+    public static readonly Key NO_CHAT_SAVED_WITH_NAME_CHATBOT = new  Key("NoChatSavedWithName");
+    public static readonly Key NAME_ALREADY_USED_CHATBOT = new  Key("NameAlreadyUsed");
 }
 
 public class Key {

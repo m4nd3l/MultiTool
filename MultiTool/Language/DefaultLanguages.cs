@@ -53,13 +53,20 @@ public class DefaultLanguages {
     "Load": "Load Saved Settings",
     "Exit": "Exit",
     "Back": "Back",
-    "ExitToClose": "Type 'exit' to close the chatbot session",
+    "ExitToClose": "Type 'exit' to close the chatbot session. Type 'help' to see all the available commands.",
+    "CommandsChatbot": "\t- 'help': Show this message\n\t- 'save [name]': Saves this chat\n\t- 'load [name]': Loads a saved chat\n\t- 'list': Lists all the chats saved",
     "You": "You",
     "NullOrEmptyPrompt": "Null or empty prompt is not valid, please try again",
     "APIKeyNotFound": "API Key Not Found",
     "ApiKeyQuestion": "What is your API Key?",
     "RequestError": "There has been an error.",
-    "LoadingAnswer": "Loading..."
+    "LoadingAnswer": "Loading...",
+    "LoadCommand": "load",
+    "SaveCommand": "save",
+    "ListCommand": "list",
+    "NoChatSaved": "Couldn't find any saved chats",
+    "NoChatSavedWithName": "Couldn't find any saved chats with the name: ",
+    "NameAlreadyUsed": "There is already a saved chat with that name",
   }
 }
 """;
