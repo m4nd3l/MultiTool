@@ -67,13 +67,33 @@ public class TranslationKeys {
     public static readonly Key API_KEY_NOT_FOUND_OR_VALID_CHATBOT = new Key("APIKeyNotFound");
     public static readonly Key ASK_API_KEY_CHATBOT = new Key("ApiKeyQuestion");
     public static readonly Key REQUEST_ERROR_CHATBOT = new Key("RequestError");
-    public static readonly Key LOADING_ANSWER_CHATBOT = new  Key("LoadingAnswer");
-    public static readonly Key SAVE_COMMAND_CHATBOT = new  Key("LoadCommand");
-    public static readonly Key LOAD_COMMAND_CHATBOT = new  Key("SaveCommand");
-    public static readonly Key LIST_COMMAND_CHATBOT = new  Key("ListCommand");
-    public static readonly Key NO_CHAT_SAVED_CHATBOT = new  Key("NoChatSaved");
-    public static readonly Key NO_CHAT_SAVED_WITH_NAME_CHATBOT = new  Key("NoChatSavedWithName");
-    public static readonly Key NAME_ALREADY_USED_CHATBOT = new  Key("NameAlreadyUsed");
+    public static readonly Key LOADING_ANSWER_CHATBOT = new Key("LoadingAnswer");
+    public static readonly Key SAVE_COMMAND_CHATBOT = new Key("SaveCommand");
+    public static readonly Key LOAD_COMMAND_CHATBOT = new Key("LoadCommand");
+    public static readonly Key LIST_COMMAND_CHATBOT = new Key("ListCommand");
+    public static readonly Key RENAME_COMMAND_CHATBOT = new Key("RenameCommand");
+    public static readonly Key DELETE_COMMAND_CHATBOT = new Key("DeleteCommand");
+    public static readonly Key MERGE_COMMAND_CHATBOT = new Key("MergeCommand");
+    public static readonly Key CLEAR_COMMAND_CHATBOT = new Key("ClearCommand");
+    public static readonly Key MODEL_COMMAND_CHATBOT = new Key("ModelCommand");
+    public static readonly Key MODELS_COMMAND_CHATBOT = new Key("ModelsCommand");
+    public static readonly Key NO_CHAT_SAVED_CHATBOT = new Key("NoChatSaved");
+    public static readonly Key NO_CHAT_SAVED_WITH_NAME_CHATBOT = new Key("NoChatSavedWithName");
+    public static readonly Key NAME_ALREADY_USED_CHATBOT = new Key("NameAlreadyUsed");
+    public static readonly Key ASK_NAME_FOR_SAVING_CHATBOT = new Key("AskNameForSave");
+    public static readonly Key ASK_SAVED_CHATBOT = new  Key("AskSaved");
+    public static readonly Key ASK_SAVED_FOR_LOAD_CHATBOT = new Key("AskSavedForLoad");
+    public static readonly Key ASK_SAVED_FOR_RENAME_CHATBOT = new Key("AskSavedForRename");
+    public static readonly Key ASK_NEW_NAME_FOR_RENAME_CHATBOT = new Key("AskNewNameForRename");
+    public static readonly Key ASK_SAVED_FOR_DELETE_CHATBOT = new Key("AskSavedForDelete");
+    public static readonly Key ASK_SAVED_FOR_MERGE_CHATBOT = new Key("AskSavedForMerge");
+    public static readonly Key ASK_MULTIPLE_SAVED_CHATBOT = new Key("AskMultipleSaved");
+    public static readonly Key ASK_ADD_THIS_CHAT_CHATBOT = new Key("AddThisChat");
+    public static readonly Key ASK_DELETE_SELECTED_CHATS_CHATBOT = new Key("DeleteSingleChats");
+    public static readonly Key SHOW_MODEL_CHATBOT = new Key("ShowModel");
+    public static readonly Key ASK_MODEL_CHATBOT = new Key("AskNewModel");
+    public static readonly Key CURRENT_CHATBOT = new Key("Current");
+
 }
 
 public class Key {

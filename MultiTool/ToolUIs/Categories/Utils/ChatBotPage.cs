@@ -16,7 +16,18 @@ namespace MultiTool.ToolUIs.Categories.Utils;
 public class ChatBotPage : Frame {
     private Title title;
     private Client? geminiClient;
-    private string geminiModel = "gemini-3.5-flash";
+    private GenerateContentConfig config;
+    private string geminiModel;
+    List<string> geminiModels = new List<string> {
+        "gemini-3.5-flash",
+        "gemini-3.1-pro",
+        "gemini-3-flash",
+        "gemini-3.1-flash-lite",
+        "gemini-2.5-pro",
+        "gemini-2.5-flash",
+        "gemini-1.5-pro",
+        "gemini-1.5-flash"
+    };
     private string promptHeader = 
         """
         # SYSTEM INSTRUCTIONS: MultiTool CLI Assistant — Formatting System
@@ -33,6 +44,12 @@ public class ChatBotPage : Frame {
         │}                                                       │
         └────────────────────────────────────────────────────────┘
         ```
+        
+        ### RULE #2. Delete background-marks
+        When you receive the history of the chat you will receive a dictionary in Json with
+        KEY: $"Prompt#{chatHistory.Count + 1}: {currentPrompt}"
+        VALUE: $"Answer#{chatHistory.Count + 1}: {response.getRawMessage()}"
+        Please if the user asks to recall those messages, delete the $"Prompt#{chatHistory.Count + 1}: " or the $"Answer#{chatHistory.Count + 1}: ".
 """;
     private Dictionary<string, string> chatHistory;
     private Dictionary<string, string> allChatHistory;
@@ -41,8 +58,17 @@ public class ChatBotPage : Frame {
         title      = new Title(TranslationKeys.CHATBOT_UTILS, ConsoleColor.Cyan, ConsoleColor.White);
         string api = getAPIKey();
         if (!string.IsNullOrEmpty(api)) geminiClient = new Client(apiKey: api);
-        chatHistory      = new  Dictionary<string, string>();
+        geminiModel    = read<string>("gemini-model") ?? geminiModels[0];
+        chatHistory    = new  Dictionary<string, string>();
         allChatHistory = new  Dictionary<string, string>();
+        config = new GenerateContentConfig {
+            SafetySettings = new List<SafetySetting> {
+                new SafetySetting { Category = HarmCategory.HarmCategoryHarassment, Threshold       = HarmBlockThreshold.BlockNone },
+                new SafetySetting { Category = HarmCategory.HarmCategoryHateSpeech, Threshold       = HarmBlockThreshold.BlockNone },
+                new SafetySetting { Category = HarmCategory.HarmCategorySexuallyExplicit, Threshold = HarmBlockThreshold.BlockNone },
+                new SafetySetting { Category = HarmCategory.HarmCategoryDangerousContent, Threshold = HarmBlockThreshold.BlockNone }
+            }
+        };
     }
     
     public override void render() {
@@ -53,24 +79,55 @@ public class ChatBotPage : Frame {
         Style loadingStyle = Style.Parse("yellow bold");
 
         string saveString = this.translate(TranslationKeys.SAVE_COMMAND_CHATBOT);
-        string loadString = this.translate(TranslationKeys.SAVE_COMMAND_CHATBOT);
+        string loadString = this.translate(TranslationKeys.LOAD_COMMAND_CHATBOT);
+        string renameString = this.translate(TranslationKeys.RENAME_COMMAND_CHATBOT);
+        string deleteString = this.translate(TranslationKeys.DELETE_COMMAND_CHATBOT);
+        string mergeString = this.translate(TranslationKeys.MERGE_COMMAND_CHATBOT);
+        string clearString = this.translate(TranslationKeys.CLEAR_COMMAND_CHATBOT);
+        string listString = this.translate(TranslationKeys.LIST_COMMAND_CHATBOT);
+        string modelString = this.translate(TranslationKeys.MODEL_COMMAND_CHATBOT);
+        string modelsString = this.translate(TranslationKeys.MODELS_COMMAND_CHATBOT);
         
         while (true) {
             currentPrompt = AnsiConsole.Prompt(new InputMessage());
-            if (currentPrompt.Equals(this.translate(TranslationKeys.EXIT), StringComparison.OrdinalIgnoreCase)) break;
-            if (currentPrompt.Substring(0, saveString.Length) == saveString) {
-                save(currentPrompt.Substring(saveString.Length));
+            if (currentPrompt.StartsWith($"/{this.translate(TranslationKeys.EXIT)}", StringComparison.OrdinalIgnoreCase)) break;
+            if (currentPrompt.StartsWith(saveString, StringComparison.OrdinalIgnoreCase)) {
+                save();
                 continue;
             }
-            if (currentPrompt.Substring(0, loadString.Length) == loadString) {
-                load(currentPrompt.Substring(loadString.Length));
+            if (currentPrompt.StartsWith(loadString, StringComparison.OrdinalIgnoreCase)) {
+                load();
                 continue;
             }
-            if (currentPrompt.Equals(this.translate(TranslationKeys.LIST_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+            if (currentPrompt.Equals(listString, StringComparison.OrdinalIgnoreCase)) {
                 list();
                 continue;
             }
-            if (currentPrompt.Equals(this.translate(TranslationKeys.HELP_MENU), StringComparison.OrdinalIgnoreCase)) {
+            if (currentPrompt.StartsWith(renameString, StringComparison.OrdinalIgnoreCase)) {
+                rename();
+                continue;
+            }
+            if (currentPrompt.StartsWith(deleteString, StringComparison.OrdinalIgnoreCase)) {
+                delete();
+                continue;
+            }
+            if (currentPrompt.StartsWith(clearString, StringComparison.OrdinalIgnoreCase)) {
+                clear();
+                continue;
+            }
+            if (currentPrompt.StartsWith(mergeString, StringComparison.OrdinalIgnoreCase)) {
+                merge();
+                continue;
+            }
+            if (currentPrompt.StartsWith(modelsString, StringComparison.OrdinalIgnoreCase)) {
+                models();
+                continue;
+            }
+            if (currentPrompt.StartsWith(modelString, StringComparison.OrdinalIgnoreCase)) {
+                model();
+                continue;
+            }
+            if (currentPrompt.StartsWith($"/{this.translate(TranslationKeys.HELP_MENU)}", StringComparison.OrdinalIgnoreCase)) {
                 AnsiConsole.Write(new Text(this.translate(TranslationKeys.COMMANDS_CHATBOT)));
                 Console.WriteLine();
                 continue;
@@ -93,7 +150,9 @@ public class ChatBotPage : Frame {
                 response.render();
                 chatHistory.Add($"Prompt#{chatHistory.Count + 1}: {currentPrompt}", $"Answer#{chatHistory.Count + 1}: {response.getRawMessage()}");
             } else chatHistory.Add($"Prompt#{chatHistory.Count + 1}: {currentPrompt}", $"Answer#{chatHistory.Count + 1}: No answer");
-            allChatHistory.Add(currentPrompt, response.getRawMessage());
+
+            allChatHistory.Add($"Prompt#{allChatHistory.Count + 1}: {currentPrompt}", $"Answer#{allChatHistory.Count + 1}: {response?.getRawMessage() ?? "No answer"}");
+            
             AnsiConsole.WriteLine();
         }
         AvailableTools.MAIN_MENU.switchMenu();
@@ -118,7 +177,7 @@ public class ChatBotPage : Frame {
                 completeInput = $"{promptHeader}\n\nCHAT HISTORY: {JsonSerializer.Serialize(chatHistory)}\n\nUSER PROMPT: {prompt}";
             }
             
-            GenerateContentResponse response = await geminiClient.Models.GenerateContentAsync(model: geminiModel, contents: completeInput);
+            GenerateContentResponse response = await geminiClient.Models.GenerateContentAsync(model: geminiModel, contents: completeInput, config: config);
             answer = response.Candidates?[0].Content?.Parts?[0].Text;
         } catch (ServerError) {
             AnsiConsole.Write(new Rule("[red]Server Busy[/]") { Justification = Justify.Left });
@@ -142,38 +201,178 @@ public class ChatBotPage : Frame {
         DirectoryInfo info = new DirectoryInfo(MultiToolSaving.chatHistoryDirectoryPath);
         if (!info.Exists) { AnsiConsole.WriteLine(this.translate(TranslationKeys.NO_CHAT_SAVED_CHATBOT)); return; }
         FileInfo[] files = info.GetFiles();
-        foreach (FileInfo file in files) AnsiConsole.WriteLine(file.Name);
+        foreach (FileInfo file in files) AnsiConsole.MarkupLine($"\t- [bold yellow]{file.Name}[/]");
     }
 
-    private void save(string name) {
-        FileInfo file = new FileInfo(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name));
-        if (file.Exists) {
-            AnsiConsole.WriteLine(this.translate(TranslationKeys.NAME_ALREADY_USED_CHATBOT));
-            return;
+    private void save() {
+        FileInfo file;
+        string name;
+        while (true) {
+            name = sanitizeFileName(AnsiConsole.Ask<string>(this.translate(TranslationKeys.ASK_NAME_FOR_SAVING_CHATBOT)));
+            file = new FileInfo(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name));
+            if (!file.Exists) break;
+            AnsiConsole.MarkupLine($"[red]{this.translate(TranslationKeys.NAME_ALREADY_USED_CHATBOT)}[/]");
         }
+        
+        if (file.Directory != null && !file.Directory.Exists) file.Directory.Create();
+        
         file.Create().Close();
         File.WriteAllText(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name), JsonSerializer.Serialize(allChatHistory));
     }
 
-    private void load(string name) {
-        FileInfo file = new FileInfo(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name));
-        if (!file.Exists) {
-            AnsiConsole.WriteLine(this.translate(TranslationKeys.NO_CHAT_SAVED_WITH_NAME_CHATBOT) + name);
-            return;
-        }
+    private void load() {
+        (FileInfo _, string name) = askChatHistory(this.translate(TranslationKeys.ASK_SAVED_FOR_LOAD_CHATBOT));
+        
         Dictionary<string, string> savedHistory = 
-            JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name))) ?? new();
+            JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name))) 
+            ?? new();
 
+        allChatHistory = savedHistory;
+        chatHistory = allChatHistory;
+        
+        clear();
+        
         foreach (string key in savedHistory.Keys) {
             string markdown = savedHistory[key];
             AnsiConsole.Write(new Text(this.translate(TranslationKeys.YOU_CHATBOT) + ": ", Color.Blue));
-            AnsiConsole.Write(key);
+            AnsiConsole.Write(removePromptPrefix(key));
+            AnsiConsole.WriteLine();
+            markdown = removeAnswerPrefix(markdown);
             new SentMessage("Gemini", Color.Blue, convertToSpectreMarkup(markdown), markdown).render();
+            AnsiConsole.WriteLine();
+        }
+    }
+    
+    private void rename() {
+        (FileInfo _, string name) = askChatHistory(this.translate(TranslationKeys.ASK_SAVED_FOR_RENAME_CHATBOT));
+        
+        FileInfo newFile;
+        string newName;
+        while (true) {
+            newName = sanitizeFileName(AnsiConsole.Ask<string>(this.translate(TranslationKeys.ASK_NEW_NAME_FOR_RENAME_CHATBOT).Replace("[%old_name%]", name)));
+            newFile = new FileInfo(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, newName));
+            if (!newFile.Exists || newName.Equals(name)) break;
+            AnsiConsole.MarkupLine($"[red]{this.translate(TranslationKeys.NAME_ALREADY_USED_CHATBOT)}[/]");
         }
         
+        File.Move(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name), 
+                  Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, newName));
+    }
+
+    private void delete() {
+        (FileInfo file, string name) = askChatHistory(this.translate(TranslationKeys.ASK_SAVED_FOR_DELETE_CHATBOT));
+        if (!file.Exists) {
+            AnsiConsole.MarkupLine($"[red]{this.translate(TranslationKeys.NO_CHAT_SAVED_WITH_NAME_CHATBOT) + name}[/]");
+            return;
+        }
+        File.Delete(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name));
+    }
+
+    private void merge() {
+        FileInfo mergedFile;
+        string mergedName;
+        bool addThisChat, deleteMergedChats;
+        
+        (List<FileInfo> files, List<string> _) = askMultipleChatHistories(this.translate(TranslationKeys.ASK_SAVED_FOR_MERGE_CHATBOT));
+        while (true) {
+            mergedName = sanitizeFileName(AnsiConsole.Ask<string>(this.translate(TranslationKeys.ASK_NAME_FOR_SAVING_CHATBOT)));
+            mergedFile = new FileInfo(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, mergedName));
+            if (!mergedFile.Exists) break;
+            AnsiConsole.MarkupLine($"[red]{this.translate(TranslationKeys.NAME_ALREADY_USED_CHATBOT)}[/]");
+        }
+        
+        addThisChat       = AnsiConsole.Confirm($"[yellow]{this.translate(TranslationKeys.ASK_ADD_THIS_CHAT_CHATBOT)}[/]");
+        deleteMergedChats = AnsiConsole.Confirm($"[yellow]{this.translate(TranslationKeys.ASK_DELETE_SELECTED_CHATS_CHATBOT)}[/]");
+        
+        List<Dictionary<string, string>> chatHistories = 
+            files.Select(file => JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(file.FullName)) 
+                                                                              ?? new Dictionary<string, string>()).ToList();
+        if (addThisChat) chatHistories.Add(allChatHistory);
+
+        Dictionary<string, string> final = new Dictionary<string, string>();
+        chatHistories.ForEach(history => history.Keys.ToList().ForEach(key => final[key] = history[key]));
+        
+        if (mergedFile.Directory != null && !mergedFile.Directory.Exists) mergedFile.Directory.Create();
+        
+        mergedFile.Create().Close();
+        File.WriteAllText(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, mergedName), JsonSerializer.Serialize(final));
+
+        if (!deleteMergedChats) return;
+        foreach (FileInfo file in files) file.Delete();
+    }
+
+    private void model() {
+        AnsiConsole.MarkupLine($"[yellow]{this.translate(TranslationKeys.SHOW_MODEL_CHATBOT)}[/][bold blue]{geminiModel}[/]");
+    }
+    
+    private void models() {
+        model();
+        List<string> choices = geminiModels;
+        choices.Remove(geminiModel);
+        string current = $"{geminiModel} -> {this.translate(TranslationKeys.CURRENT_CHATBOT)}";
+        choices.Add(current);
+        geminiModel = AnsiConsole.Prompt(new SelectionPrompt<string>().AddChoices(geminiModels).Title(this.translate(TranslationKeys.ASK_MODEL_CHATBOT)));
+        save("gemini-model",  geminiModel);
+    }
+
+    private void clear() {
+        AnsiConsole.Clear();
+        allChatHistory = new Dictionary<string, string>();
+        chatHistory = new Dictionary<string, string>();
+        title.render();
+        AnsiConsole.Write(new Text(this.translate(TranslationKeys.EXIT_TO_CLOSE_CHATBOT)) { Justification = Justify.Center });
+        AnsiConsole.WriteLine();
     }
 
     private List<IRenderable> convertToSpectreMarkup(string input) {
         return new MarkdownToMarkupTranslator().translateToRenderables(new MarkdownLexer().tokenize(input));
+    }
+
+    public string sanitizeFileName(string originalName) {
+        if (string.IsNullOrEmpty(originalName)) return string.Empty;
+        if (originalName.StartsWith(' ')) originalName = originalName.Substring(1);
+        string cleanName = originalName.Replace(" ", "_");
+        char[] invalidCharacters = Path.GetInvalidFileNameChars();
+
+        for (int i = 0; i < invalidCharacters.Length; i++) {
+            char invalidCharacter = invalidCharacters[i];
+            if (cleanName.Contains(invalidCharacter)) cleanName = cleanName.Replace(invalidCharacter.ToString(), string.Empty);
+        }
+        
+        return cleanName;
+    }
+    
+    public string removePromptPrefix(string originalText) {
+        if (string.IsNullOrEmpty(originalText)) return string.Empty;
+        return Regex.Replace(originalText, @"^Prompt#\d+:\s*", string.Empty);
+    }
+    
+    public string removeAnswerPrefix(string originalText) {
+        if (string.IsNullOrEmpty(originalText)) return string.Empty;
+        return Regex.Replace(originalText, @"Answer#\d+:\s*", string.Empty);
+    }
+
+    private List<FileInfo> getChatHistory() {
+        DirectoryInfo info = new DirectoryInfo(MultiToolSaving.chatHistoryDirectoryPath);
+        if (!info.Exists) { AnsiConsole.WriteLine(this.translate(TranslationKeys.NO_CHAT_SAVED_CHATBOT)); return new (); }
+        return new List<FileInfo>(info.GetFiles());
+    }
+
+    private (FileInfo, string) askChatHistory(string? askTitle = null) {
+        FileInfo selected = 
+            AnsiConsole.Prompt(new SelectionPrompt<FileInfo>()
+                                   .AddChoices(getChatHistory())
+                                   .UseConverter(file => file.Name)
+                                   .Title(askTitle ?? this.translate(TranslationKeys.ASK_SAVED_CHATBOT)));
+        return (selected, selected.Name);
+    }
+    
+    private (List<FileInfo>, List<string>) askMultipleChatHistories(string? askTitle = null) {
+        List<FileInfo> selected = 
+            AnsiConsole.Prompt(new MultiSelectionPrompt<FileInfo>()
+                                   .AddChoices(getChatHistory())
+                                   .UseConverter(file => file.Name)
+                                   .Title(askTitle ?? this.translate(TranslationKeys.ASK_MULTIPLE_SAVED_CHATBOT)));
+        return (selected, selected.Select(file => file.Name).ToList());
     }
 }
