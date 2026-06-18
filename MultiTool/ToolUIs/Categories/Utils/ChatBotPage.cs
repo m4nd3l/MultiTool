@@ -9,6 +9,7 @@ using Spectre.Console.Rendering;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Color = Spectre.Console.Color;
 using File = System.IO.File;
 
 namespace MultiTool.ToolUIs.Categories.Utils;
@@ -77,61 +78,12 @@ public class ChatBotPage : Frame {
         AnsiConsole.WriteLine();
         string currentPrompt;
         Style loadingStyle = Style.Parse("yellow bold");
-
-        string saveString = this.translate(TranslationKeys.SAVE_COMMAND_CHATBOT);
-        string loadString = this.translate(TranslationKeys.LOAD_COMMAND_CHATBOT);
-        string renameString = this.translate(TranslationKeys.RENAME_COMMAND_CHATBOT);
-        string deleteString = this.translate(TranslationKeys.DELETE_COMMAND_CHATBOT);
-        string mergeString = this.translate(TranslationKeys.MERGE_COMMAND_CHATBOT);
-        string clearString = this.translate(TranslationKeys.CLEAR_COMMAND_CHATBOT);
-        string listString = this.translate(TranslationKeys.LIST_COMMAND_CHATBOT);
-        string modelString = this.translate(TranslationKeys.MODEL_COMMAND_CHATBOT);
-        string modelsString = this.translate(TranslationKeys.MODELS_COMMAND_CHATBOT);
         
         while (true) {
             currentPrompt = AnsiConsole.Prompt(new InputMessage());
             if (currentPrompt.StartsWith($"/{this.translate(TranslationKeys.EXIT)}", StringComparison.OrdinalIgnoreCase)) break;
-            if (currentPrompt.StartsWith(saveString, StringComparison.OrdinalIgnoreCase)) {
-                save();
-                continue;
-            }
-            if (currentPrompt.StartsWith(loadString, StringComparison.OrdinalIgnoreCase)) {
-                load();
-                continue;
-            }
-            if (currentPrompt.Equals(listString, StringComparison.OrdinalIgnoreCase)) {
-                list();
-                continue;
-            }
-            if (currentPrompt.StartsWith(renameString, StringComparison.OrdinalIgnoreCase)) {
-                rename();
-                continue;
-            }
-            if (currentPrompt.StartsWith(deleteString, StringComparison.OrdinalIgnoreCase)) {
-                delete();
-                continue;
-            }
-            if (currentPrompt.StartsWith(clearString, StringComparison.OrdinalIgnoreCase)) {
-                clear();
-                continue;
-            }
-            if (currentPrompt.StartsWith(mergeString, StringComparison.OrdinalIgnoreCase)) {
-                merge();
-                continue;
-            }
-            if (currentPrompt.StartsWith(modelsString, StringComparison.OrdinalIgnoreCase)) {
-                models();
-                continue;
-            }
-            if (currentPrompt.StartsWith(modelString, StringComparison.OrdinalIgnoreCase)) {
-                model();
-                continue;
-            }
-            if (currentPrompt.StartsWith($"/{this.translate(TranslationKeys.HELP_MENU)}", StringComparison.OrdinalIgnoreCase)) {
-                AnsiConsole.Write(new Text(this.translate(TranslationKeys.COMMANDS_CHATBOT)));
-                Console.WriteLine();
-                continue;
-            }
+
+            if (checkForCommands(currentPrompt)) continue;
             
             SentMessage? response = null;
             bool succeded = false;
@@ -195,6 +147,51 @@ public class ChatBotPage : Frame {
         
         if (string.IsNullOrEmpty(answer)) answer = this.translate(TranslationKeys.REQUEST_ERROR_CHATBOT);
         return (new SentMessage("Gemini", Color.Blue, convertToSpectreMarkup(answer), answer), succeded);
+    }
+
+    private bool checkForCommands(string currentPrompt) {
+        if (currentPrompt.StartsWith(this.translate(TranslationKeys.SAVE_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+            save();
+            return true;
+        }
+        if (currentPrompt.StartsWith(this.translate(TranslationKeys.LOAD_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+            load();
+            return true;
+        }
+        if (currentPrompt.Equals(this.translate(TranslationKeys.LIST_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+            list();
+            return true;
+        }
+        if (currentPrompt.StartsWith(this.translate(TranslationKeys.RENAME_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+            rename();
+            return true;
+        }
+        if (currentPrompt.StartsWith(this.translate(TranslationKeys.DELETE_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+            delete();
+            return true;
+        }
+        if (currentPrompt.StartsWith(this.translate(TranslationKeys.CLEAR_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+            clear();
+            return true;
+        }
+        if (currentPrompt.StartsWith(this.translate(TranslationKeys.MERGE_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+            merge();
+            return true;
+        }
+        if (currentPrompt.StartsWith(this.translate(TranslationKeys.MODELS_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+            models();
+            return true;
+        }
+        if (currentPrompt.StartsWith(this.translate(TranslationKeys.MODEL_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+            model();
+            return true;
+        }
+        if (currentPrompt.StartsWith($"/{this.translate(TranslationKeys.HELP_MENU)}", StringComparison.OrdinalIgnoreCase)) {
+            AnsiConsole.Write(new Text(this.translate(TranslationKeys.COMMANDS_CHATBOT)));
+            Console.WriteLine();
+            return true;
+        }
+        return false;
     }
 
     private void list() {

@@ -1,6 +1,7 @@
 ﻿using Spectre.Console;
 using Spectre.Console.Rendering;
 using System.Text.RegularExpressions;
+using Color = Spectre.Console.Color;
 
 namespace MultiTool.UI;
 

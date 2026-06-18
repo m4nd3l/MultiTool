@@ -9,8 +9,6 @@ public class MainMenu : Frame {
     private Title title;
     private SelectionPrompt<AvailableToolMenu> menu;
     private List<AvailableToolMenu> options;
-    private int maxChoiceLength;
-    private string choicesPadding;
     public MainMenu() {
         options = new List<AvailableToolMenu> { 
             AvailableTools.UTILS_MENU,
@@ -24,14 +22,8 @@ public class MainMenu : Frame {
             AvailableTools.SAFE_CLOSE_EXIT
         };
         
-        foreach (AvailableToolMenu option in options) maxChoiceLength = Math.Max(maxChoiceLength, option.ToString().Length);
-        
-        int leftSpaceChoices = Math.Max(0, (Console.WindowWidth - (maxChoiceLength + 2)) / 2);
-        choicesPadding = new string(' ', leftSpaceChoices);
-        
         title = new Title(TranslationKeys.MAIN_MENU, ConsoleColor.Red, ConsoleColor.Yellow, HorizontalAlignment.CENTER);
         menu  = new SelectionPrompt<AvailableToolMenu>()
-            .UseConverter(choice => $"{choicesPadding}{choice}")
             .AddChoices(options);
     }
     

@@ -1,6 +1,7 @@
 ﻿using MultiTool.Extensions;
 using MultiTool.Language;
 using Spectre.Console;
+using Color = Spectre.Console.Color;
 
 namespace MultiTool.UI;
 

@@ -2,6 +2,7 @@
 using MultiTool.Language;
 using MultiTool.UI.FiggleFont;
 using Spectre.Console;
+using Color = Spectre.Console.Color;
 
 namespace MultiTool.UI;
 

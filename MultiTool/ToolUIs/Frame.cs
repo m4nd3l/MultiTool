@@ -22,4 +22,14 @@ public abstract class Frame {
     public void save(string key, object content) { MultiToolSaving.saveSetting(key, content); }
 
     public T? read<T>(string key) { return MultiToolSaving.getSetting<T>(key); }
+    
+    public string promptForFile() {
+        OpenFileDialog openFileDialog = new OpenFileDialog();
+        openFileDialog.Filter = "All files (*.*)|*.*";
+        openFileDialog.Title  = "Select a File";
+
+        if (openFileDialog.ShowDialog() == DialogResult.OK) return openFileDialog.FileName;
+
+        return null;
+    }
 }

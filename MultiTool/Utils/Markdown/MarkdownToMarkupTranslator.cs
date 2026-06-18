@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using Spectre.Console;
 using Spectre.Console.Rendering;
+using Color = Spectre.Console.Color;
+using Panel = Spectre.Console.Panel;
 
 namespace MultiTool.Utils.Markdown;
 

@@ -10,23 +10,15 @@ public class UtilsTool : Frame {
     private Title title;
     private SelectionPrompt<AvailableTool> menu;
     private List<AvailableTool> options;
-    private int maxChoiceLength;
-    private string choicesPadding;
+
     public UtilsTool() {
         options = new List<AvailableTool> { 
             AvailableTools.CHATBOT_UTILS,
             AvailableTools.BACK_TO_MAIN_MENU
         };
         
-        foreach (AvailableTool option in options) maxChoiceLength = Math.Max(maxChoiceLength, option.ToString().Length);
-        
-        int leftSpaceChoices = Math.Max(0, (Console.WindowWidth - (maxChoiceLength + 2)) / 2);
-        choicesPadding = new string(' ', leftSpaceChoices);
-        
         title = new Title(TranslationKeys.UTILS_MENU, ConsoleColor.Blue, ConsoleColor.Cyan, HorizontalAlignment.CENTER);
-        menu  = new SelectionPrompt<AvailableTool>()
-            .UseConverter(choice => $"{choicesPadding}{choice}")
-            .AddChoices(options);
+        menu  = new SelectionPrompt<AvailableTool>().AddChoices(options);
     }
     
     public override void render() {

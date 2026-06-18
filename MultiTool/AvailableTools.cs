@@ -163,11 +163,8 @@ public class AvailableTools {
     private static AvailableTool languageSettings;
     public static AvailableTool LANGUAGE_SETTINGS { get => languageSettings ??= new AvailableTool(TranslationKeys.LANGUAGE_SETTINGS); }
     
-    private static AvailableTool apiKeysSettings;
-    public static AvailableTool API_KEYS_SETTINGS { get => apiKeysSettings ??= new AvailableTool(TranslationKeys.API_KEYS_SETTINGS); }
-    
-    private static AvailableTool logLevelSettings;
-    public static AvailableTool LOG_LEVEL_SETTINGS { get => logLevelSettings ??= new AvailableTool(TranslationKeys.LOG_LEVEL_SETTINGS); }
+    private static AvailableTool geminiAPIKeySettings;
+    public static AvailableTool GEMINI_API_KEY_SETTINGS { get => geminiAPIKeySettings ??= new AvailableTool(TranslationKeys.API_KEYS_SETTINGS); }
         
     private static AvailableTool backupSettings;
     public static AvailableTool BACKUP_SETTINGS { get => backupSettings ??= new AvailableTool(TranslationKeys.BACKUP_SETTINGS); }
