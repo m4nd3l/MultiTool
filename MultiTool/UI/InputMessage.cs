@@ -2,6 +2,7 @@
 using MultiTool.Language;
 using Spectre.Console;
 using Color = Spectre.Console.Color;
+using Keys = MultiTool.Language.Keys;
 
 namespace MultiTool.UI;
 
@@ -12,7 +13,7 @@ public class InputMessage : IPrompt<string> {
         bool first = true, warned = false;
         string? input = "";
     
-        AnsiConsole.Write(new Text(this.translate(TranslationKeys.YOU_CHATBOT) + ": ", Color.Blue));
+        AnsiConsole.Write(new Text(this.translate(Keys.YOU_CHATBOT) + ": ", Color.Blue));
         int promptCursorTop = Console.CursorTop;
         int promptCursorLeft = Console.CursorLeft;
 
@@ -25,7 +26,7 @@ public class InputMessage : IPrompt<string> {
             
                 if (targetWarningTop >= 0 && targetWarningTop < Console.BufferHeight) {
                     Console.SetCursorPosition(0, targetWarningTop);
-                    AnsiConsole.Write(new Text(this.translate(TranslationKeys.NULL_OR_EMPTY_PROMPT_CHATBOT), Color.Red));
+                    AnsiConsole.Write(new Text(this.translate(Keys.NULL_OR_EMPTY_PROMPT_CHATBOT), Color.Red));
                 }
             }
 

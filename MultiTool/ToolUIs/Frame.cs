@@ -24,12 +24,36 @@ public abstract class Frame {
     public T? read<T>(string key) { return MultiToolSaving.getSetting<T>(key); }
     
     public string promptForFile() {
-        OpenFileDialog openFileDialog = new OpenFileDialog();
-        openFileDialog.Filter = "All files (*.*)|*.*";
-        openFileDialog.Title  = "Select a File";
+        string result = null;
+        Thread thread = new Thread(() => {
+                                       OpenFileDialog openFileDialog = new OpenFileDialog();
+                                       openFileDialog.Filter = "All files (*.*)|*.*";
+                                       openFileDialog.Title  = "Select a File";
 
-        if (openFileDialog.ShowDialog() == DialogResult.OK) return openFileDialog.FileName;
+                                       if (openFileDialog.ShowDialog() == DialogResult.OK) result = openFileDialog.FileName;
+                                   });
 
-        return null;
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        thread.Join();
+
+        return result;
+    }
+    
+    public string promptForNewFilePath() {
+        string result = null;
+        Thread thread = new Thread(() => {
+                                       SaveFileDialog saveFileDialog = new SaveFileDialog();
+                                       saveFileDialog.Filter = "All files (*.*)|*.*";
+                                       saveFileDialog.Title  = "Select a Save Location";
+
+                                       if (saveFileDialog.ShowDialog() == DialogResult.OK) result = saveFileDialog.FileName;
+                                   });
+
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        thread.Join();
+
+        return result;
     }
 }

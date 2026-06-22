@@ -38,14 +38,14 @@ public class DefaultLanguages {
     "Emergency": "Rapid Recovery & Cleanup",
     "ProcessKiller": "Forceful Process Terminator",
     "RamFlusher": "Standby RAM Flusher",
-    "BackupRestorer": "Configuration Backup Restorer",
+    "BackupRestorer": "Settings Backup Restorer",
     "NetworkReseter": "Network Adapter Reset Tool",
     "Help": "Help",
     "CommandGuide": "Interactive Command Manual",
     "Args": "CLI Arguments & Switches",
     "VersionChecker": "Build Version & Credits",
-    "Settings": "Configuration Settings",
-    "Language": "Display Language Settings",
+    "Settings": "Settings",
+    "Language": "Language",
     "ApiKeys": "API Authentication Keys",
     "LogLevel": "Logging Verbosity Threshold",
     "ResetFactory": "Factory Default Reset",
@@ -85,7 +85,19 @@ public class DefaultLanguages {
     "DeleteSingleChats": "Do you want to delete the single chats?",
     "ShowModel": "Current gemini model: ",
     "AskNewModel": "Which model do you want to use?",
-    "Current": "Current"
+    "Current": "Current",
+    "CurrentApiKey": "Your current API Key is: ",
+    "ExitToCloseSettings": "Type 'exit' to close this page",
+    "EnterText": "Enter text: ",
+    "ActionAsk": "What would you like to do with this text?",
+    "EnterToContinue": "Press enter to continue...",
+    "Lowercase": "Lowercase",
+    "Uppercase": "Uppercase",
+    "Base64Decode": "Base64 Decode",
+    "Base64Encode": "Base64 Encode",
+    "InvalidBase64String": "Invalid Base64 String",
+    "BloodyFont": "Bloody Font",
+    "Result": "Result"
   }
 }
 """;

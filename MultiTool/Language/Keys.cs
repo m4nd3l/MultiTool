@@ -1,6 +1,6 @@
 ﻿namespace MultiTool.Language;
 
-public class TranslationKeys {
+public class Keys {
     public static readonly Key MAIN_MENU = new Key("MultiTool");
     
     public static readonly Key UTILS_MENU = new Key("Utils");
@@ -93,7 +93,18 @@ public class TranslationKeys {
     public static readonly Key SHOW_MODEL_CHATBOT = new Key("ShowModel");
     public static readonly Key ASK_MODEL_CHATBOT = new Key("AskNewModel");
     public static readonly Key CURRENT_CHATBOT = new Key("Current");
-
+    public static readonly Key CURRENT_API_KEY_SETTINGS = new Key("CurrentApiKey");
+    public static readonly Key EXIT_TO_CLOSE_SETTINGS = new Key("ExitToCloseSettings");
+    public static readonly Key ENTER_TEXT = new Key("EnterText");
+    public static readonly Key ASK_ACTION = new Key("ActionAsk");
+    public static readonly Key PRESS_ENTER_TO_CONTINUE = new Key("EnterToContinue");
+    public static readonly Key LOWERCASE = new Key("Lowercase");
+    public static readonly Key UPPERCASE = new Key("Uppercase");
+    public static readonly Key BASE64_DECODE = new Key("Base64Decode");
+    public static readonly Key BASE64_ENCODE = new Key("Base64Encode");
+    public static readonly Key INVALID_BASE64_STRING = new Key("InvalidBase64String");
+    public static readonly Key BLOODY_FONT = new Key("BloodyFont");
+    public static readonly Key RESULT = new Key("Result");
 }
 
 public class Key {

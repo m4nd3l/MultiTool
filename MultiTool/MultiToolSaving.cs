@@ -5,7 +5,7 @@ namespace MultiTool;
 
 public class MultiToolSaving {
     private static readonly string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\MultiTool";
-    private static readonly string filePath = Path.Combine(path, "settings");
+    public static readonly string filePath = Path.Combine(path, "settings");
     public static readonly string chatHistoryDirectoryPath = Path.Combine(path, "chatbot_history");
     public static readonly string languagesDirectoryPath = Path.Combine(path, "languages");
     private static Dictionary<string, object> settings = new Dictionary<string, object>();
@@ -37,4 +37,7 @@ public class MultiToolSaving {
             return JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(value));
         return default;
     }
+
+    public static Dictionary<string, object> getSettings() => settings;
+    public static void setSettings(Dictionary<string, object> newSettings) { settings = newSettings; }
 }

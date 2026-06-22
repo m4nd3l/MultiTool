@@ -22,9 +22,14 @@ public class LanguageManager {
                 if (languageData != null) languages.Add(languageData.name, languageData);
             }
         }
+
+        currentKey = MultiToolSaving.getSetting<string>("language") ?? "English";
     }
 
-    public static void changeLanguageKey(string newLanguageKey) { currentKey = newLanguageKey; } 
+    public static void changeLanguageKey(string newLanguageKey) {
+        currentKey = newLanguageKey;
+        
+    } 
     
     public static void changeLanguage(string json) {
         LanguageData? languageData = JsonSerializer.Deserialize<LanguageData>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -33,5 +38,8 @@ public class LanguageManager {
         currentKey = languageData.name;
     }
 
+    public static List<string> getLanguages() => languages.Keys.ToList();
+    public static string getLanguage() => currentKey; 
+    
     public static string getTranslation(Key key) => languages.ContainsKey(currentKey) ? languages[currentKey].get(key) : "Unknown";
 }

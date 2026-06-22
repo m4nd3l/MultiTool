@@ -2,6 +2,7 @@
 using MultiTool.UI;
 using Spectre.Console;
 using HorizontalAlignment = MultiTool.UI.HorizontalAlignment;
+using Keys = MultiTool.Language.Keys;
 
 namespace MultiTool.ToolUIs;
 
@@ -22,7 +23,7 @@ public class MainMenu : Frame {
             AvailableTools.SAFE_CLOSE_EXIT
         };
         
-        title = new Title(TranslationKeys.MAIN_MENU, ConsoleColor.Red, ConsoleColor.Yellow, HorizontalAlignment.CENTER);
+        title = new Title(Keys.MAIN_MENU, ConsoleColor.Red, ConsoleColor.Yellow, HorizontalAlignment.CENTER);
         menu  = new SelectionPrompt<AvailableToolMenu>()
             .AddChoices(options);
     }

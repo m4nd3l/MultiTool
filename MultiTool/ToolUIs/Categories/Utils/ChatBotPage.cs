@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Color = Spectre.Console.Color;
 using File = System.IO.File;
+using Keys = MultiTool.Language.Keys;
 
 namespace MultiTool.ToolUIs.Categories.Utils;
 
@@ -56,7 +57,7 @@ public class ChatBotPage : Frame {
     private Dictionary<string, string> allChatHistory;
 
     public ChatBotPage() {
-        title      = new Title(TranslationKeys.CHATBOT_UTILS, ConsoleColor.Cyan, ConsoleColor.White);
+        title      = new Title(Keys.CHATBOT_UTILS, ConsoleColor.Cyan, ConsoleColor.White);
         string api = getAPIKey();
         if (!string.IsNullOrEmpty(api)) geminiClient = new Client(apiKey: api);
         geminiModel    = read<string>("gemini-model") ?? geminiModels[0];
@@ -74,14 +75,14 @@ public class ChatBotPage : Frame {
     
     public override void render() {
         title.render();
-        AnsiConsole.Write(new Text(this.translate(TranslationKeys.EXIT_TO_CLOSE_CHATBOT)) { Justification = Justify.Center });
+        AnsiConsole.Write(new Text(this.translate(Keys.EXIT_TO_CLOSE_CHATBOT)) { Justification = Justify.Center });
         AnsiConsole.WriteLine();
         string currentPrompt;
         Style loadingStyle = Style.Parse("yellow bold");
         
         while (true) {
             currentPrompt = AnsiConsole.Prompt(new InputMessage());
-            if (currentPrompt.StartsWith($"/{this.translate(TranslationKeys.EXIT)}", StringComparison.OrdinalIgnoreCase)) break;
+            if (currentPrompt.StartsWith($"/{this.translate(Keys.EXIT)}", StringComparison.OrdinalIgnoreCase)) break;
 
             if (checkForCommands(currentPrompt)) continue;
             
@@ -91,7 +92,7 @@ public class ChatBotPage : Frame {
             AnsiConsole.Status()
                 .Spinner(Spinner.Known.Dots)
                 .SpinnerStyle(loadingStyle)
-                .StartAsync(this.translate(TranslationKeys.LOADING_ANSWER_CHATBOT),
+                .StartAsync(this.translate(Keys.LOADING_ANSWER_CHATBOT),
                             _ => {
                                 var task = Task.Run(() => geminiRequest(currentPrompt));
                                 task.Wait();
@@ -113,8 +114,8 @@ public class ChatBotPage : Frame {
     private async Task<(SentMessage, bool)> geminiRequest(string prompt) {
         if (geminiClient == null) {
             while (true) {
-                AnsiConsole.Write(new Text(this.translate(TranslationKeys.API_KEY_NOT_FOUND_OR_VALID_CHATBOT) + "\n", Color.Red));
-                string apiKey = AnsiConsole.Ask<string>(this.translate(TranslationKeys.ASK_API_KEY_CHATBOT));
+                AnsiConsole.Write(new Text(this.translate(Keys.API_KEY_NOT_FOUND_OR_VALID_CHATBOT) + "\n", Color.Red));
+                string apiKey = AnsiConsole.Ask<string>(this.translate(Keys.ASK_API_KEY_CHATBOT));
                 if (string.IsNullOrEmpty(apiKey)) continue;
                 try { geminiClient = new Client(apiKey: apiKey); } catch { continue; }
                 break;
@@ -145,49 +146,49 @@ public class ChatBotPage : Frame {
             succeded = false;
         }
         
-        if (string.IsNullOrEmpty(answer)) answer = this.translate(TranslationKeys.REQUEST_ERROR_CHATBOT);
+        if (string.IsNullOrEmpty(answer)) answer = this.translate(Keys.REQUEST_ERROR_CHATBOT);
         return (new SentMessage("Gemini", Color.Blue, convertToSpectreMarkup(answer), answer), succeded);
     }
 
     private bool checkForCommands(string currentPrompt) {
-        if (currentPrompt.StartsWith(this.translate(TranslationKeys.SAVE_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+        if (currentPrompt.StartsWith(this.translate(Keys.SAVE_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
             save();
             return true;
         }
-        if (currentPrompt.StartsWith(this.translate(TranslationKeys.LOAD_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+        if (currentPrompt.StartsWith(this.translate(Keys.LOAD_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
             load();
             return true;
         }
-        if (currentPrompt.Equals(this.translate(TranslationKeys.LIST_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+        if (currentPrompt.Equals(this.translate(Keys.LIST_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
             list();
             return true;
         }
-        if (currentPrompt.StartsWith(this.translate(TranslationKeys.RENAME_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+        if (currentPrompt.StartsWith(this.translate(Keys.RENAME_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
             rename();
             return true;
         }
-        if (currentPrompt.StartsWith(this.translate(TranslationKeys.DELETE_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+        if (currentPrompt.StartsWith(this.translate(Keys.DELETE_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
             delete();
             return true;
         }
-        if (currentPrompt.StartsWith(this.translate(TranslationKeys.CLEAR_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+        if (currentPrompt.StartsWith(this.translate(Keys.CLEAR_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
             clear();
             return true;
         }
-        if (currentPrompt.StartsWith(this.translate(TranslationKeys.MERGE_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+        if (currentPrompt.StartsWith(this.translate(Keys.MERGE_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
             merge();
             return true;
         }
-        if (currentPrompt.StartsWith(this.translate(TranslationKeys.MODELS_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+        if (currentPrompt.StartsWith(this.translate(Keys.MODELS_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
             models();
             return true;
         }
-        if (currentPrompt.StartsWith(this.translate(TranslationKeys.MODEL_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
+        if (currentPrompt.StartsWith(this.translate(Keys.MODEL_COMMAND_CHATBOT), StringComparison.OrdinalIgnoreCase)) {
             model();
             return true;
         }
-        if (currentPrompt.StartsWith($"/{this.translate(TranslationKeys.HELP_MENU)}", StringComparison.OrdinalIgnoreCase)) {
-            AnsiConsole.Write(new Text(this.translate(TranslationKeys.COMMANDS_CHATBOT)));
+        if (currentPrompt.StartsWith($"/{this.translate(Keys.HELP_MENU)}", StringComparison.OrdinalIgnoreCase)) {
+            AnsiConsole.Write(new Text(this.translate(Keys.COMMANDS_CHATBOT)));
             Console.WriteLine();
             return true;
         }
@@ -196,7 +197,7 @@ public class ChatBotPage : Frame {
 
     private void list() {
         DirectoryInfo info = new DirectoryInfo(MultiToolSaving.chatHistoryDirectoryPath);
-        if (!info.Exists) { AnsiConsole.WriteLine(this.translate(TranslationKeys.NO_CHAT_SAVED_CHATBOT)); return; }
+        if (!info.Exists) { AnsiConsole.WriteLine(this.translate(Keys.NO_CHAT_SAVED_CHATBOT)); return; }
         FileInfo[] files = info.GetFiles();
         foreach (FileInfo file in files) AnsiConsole.MarkupLine($"\t- [bold yellow]{file.Name}[/]");
     }
@@ -205,10 +206,10 @@ public class ChatBotPage : Frame {
         FileInfo file;
         string name;
         while (true) {
-            name = sanitizeFileName(AnsiConsole.Ask<string>(this.translate(TranslationKeys.ASK_NAME_FOR_SAVING_CHATBOT)));
+            name = sanitizeFileName(AnsiConsole.Ask<string>(this.translate(Keys.ASK_NAME_FOR_SAVING_CHATBOT)));
             file = new FileInfo(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name));
             if (!file.Exists) break;
-            AnsiConsole.MarkupLine($"[red]{this.translate(TranslationKeys.NAME_ALREADY_USED_CHATBOT)}[/]");
+            AnsiConsole.MarkupLine($"[red]{this.translate(Keys.NAME_ALREADY_USED_CHATBOT)}[/]");
         }
         
         if (file.Directory != null && !file.Directory.Exists) file.Directory.Create();
@@ -218,7 +219,7 @@ public class ChatBotPage : Frame {
     }
 
     private void load() {
-        (FileInfo _, string name) = askChatHistory(this.translate(TranslationKeys.ASK_SAVED_FOR_LOAD_CHATBOT));
+        (FileInfo _, string name) = askChatHistory(this.translate(Keys.ASK_SAVED_FOR_LOAD_CHATBOT));
         
         Dictionary<string, string> savedHistory = 
             JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name))) 
@@ -231,7 +232,7 @@ public class ChatBotPage : Frame {
         
         foreach (string key in savedHistory.Keys) {
             string markdown = savedHistory[key];
-            AnsiConsole.Write(new Text(this.translate(TranslationKeys.YOU_CHATBOT) + ": ", Color.Blue));
+            AnsiConsole.Write(new Text(this.translate(Keys.YOU_CHATBOT) + ": ", Color.Blue));
             AnsiConsole.Write(removePromptPrefix(key));
             AnsiConsole.WriteLine();
             markdown = removeAnswerPrefix(markdown);
@@ -241,15 +242,15 @@ public class ChatBotPage : Frame {
     }
     
     private void rename() {
-        (FileInfo _, string name) = askChatHistory(this.translate(TranslationKeys.ASK_SAVED_FOR_RENAME_CHATBOT));
+        (FileInfo _, string name) = askChatHistory(this.translate(Keys.ASK_SAVED_FOR_RENAME_CHATBOT));
         
         FileInfo newFile;
         string newName;
         while (true) {
-            newName = sanitizeFileName(AnsiConsole.Ask<string>(this.translate(TranslationKeys.ASK_NEW_NAME_FOR_RENAME_CHATBOT).Replace("[%old_name%]", name)));
+            newName = sanitizeFileName(AnsiConsole.Ask<string>(this.translate(Keys.ASK_NEW_NAME_FOR_RENAME_CHATBOT).Replace("[%old_name%]", name)));
             newFile = new FileInfo(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, newName));
             if (!newFile.Exists || newName.Equals(name)) break;
-            AnsiConsole.MarkupLine($"[red]{this.translate(TranslationKeys.NAME_ALREADY_USED_CHATBOT)}[/]");
+            AnsiConsole.MarkupLine($"[red]{this.translate(Keys.NAME_ALREADY_USED_CHATBOT)}[/]");
         }
         
         File.Move(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name), 
@@ -257,9 +258,9 @@ public class ChatBotPage : Frame {
     }
 
     private void delete() {
-        (FileInfo file, string name) = askChatHistory(this.translate(TranslationKeys.ASK_SAVED_FOR_DELETE_CHATBOT));
+        (FileInfo file, string name) = askChatHistory(this.translate(Keys.ASK_SAVED_FOR_DELETE_CHATBOT));
         if (!file.Exists) {
-            AnsiConsole.MarkupLine($"[red]{this.translate(TranslationKeys.NO_CHAT_SAVED_WITH_NAME_CHATBOT) + name}[/]");
+            AnsiConsole.MarkupLine($"[red]{this.translate(Keys.NO_CHAT_SAVED_WITH_NAME_CHATBOT) + name}[/]");
             return;
         }
         File.Delete(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, name));
@@ -270,16 +271,16 @@ public class ChatBotPage : Frame {
         string mergedName;
         bool addThisChat, deleteMergedChats;
         
-        (List<FileInfo> files, List<string> _) = askMultipleChatHistories(this.translate(TranslationKeys.ASK_SAVED_FOR_MERGE_CHATBOT));
+        (List<FileInfo> files, List<string> _) = askMultipleChatHistories(this.translate(Keys.ASK_SAVED_FOR_MERGE_CHATBOT));
         while (true) {
-            mergedName = sanitizeFileName(AnsiConsole.Ask<string>(this.translate(TranslationKeys.ASK_NAME_FOR_SAVING_CHATBOT)));
+            mergedName = sanitizeFileName(AnsiConsole.Ask<string>(this.translate(Keys.ASK_NAME_FOR_SAVING_CHATBOT)));
             mergedFile = new FileInfo(Path.Combine(MultiToolSaving.chatHistoryDirectoryPath, mergedName));
             if (!mergedFile.Exists) break;
-            AnsiConsole.MarkupLine($"[red]{this.translate(TranslationKeys.NAME_ALREADY_USED_CHATBOT)}[/]");
+            AnsiConsole.MarkupLine($"[red]{this.translate(Keys.NAME_ALREADY_USED_CHATBOT)}[/]");
         }
         
-        addThisChat       = AnsiConsole.Confirm($"[yellow]{this.translate(TranslationKeys.ASK_ADD_THIS_CHAT_CHATBOT)}[/]");
-        deleteMergedChats = AnsiConsole.Confirm($"[yellow]{this.translate(TranslationKeys.ASK_DELETE_SELECTED_CHATS_CHATBOT)}[/]");
+        addThisChat       = AnsiConsole.Confirm($"[yellow]{this.translate(Keys.ASK_ADD_THIS_CHAT_CHATBOT)}[/]");
+        deleteMergedChats = AnsiConsole.Confirm($"[yellow]{this.translate(Keys.ASK_DELETE_SELECTED_CHATS_CHATBOT)}[/]");
         
         List<Dictionary<string, string>> chatHistories = 
             files.Select(file => JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(file.FullName)) 
@@ -299,16 +300,16 @@ public class ChatBotPage : Frame {
     }
 
     private void model() {
-        AnsiConsole.MarkupLine($"[yellow]{this.translate(TranslationKeys.SHOW_MODEL_CHATBOT)}[/][bold blue]{geminiModel}[/]");
+        AnsiConsole.MarkupLine($"[yellow]{this.translate(Keys.SHOW_MODEL_CHATBOT)}[/][bold blue]{geminiModel}[/]");
     }
     
     private void models() {
         model();
         List<string> choices = geminiModels;
         choices.Remove(geminiModel);
-        string current = $"{geminiModel} -> {this.translate(TranslationKeys.CURRENT_CHATBOT)}";
+        string current = $"{geminiModel} -> {this.translate(Keys.CURRENT_CHATBOT)}";
         choices.Add(current);
-        geminiModel = AnsiConsole.Prompt(new SelectionPrompt<string>().AddChoices(geminiModels).Title(this.translate(TranslationKeys.ASK_MODEL_CHATBOT)));
+        geminiModel = AnsiConsole.Prompt(new SelectionPrompt<string>().AddChoices(geminiModels).Title(this.translate(Keys.ASK_MODEL_CHATBOT)));
         save("gemini-model",  geminiModel);
     }
 
@@ -317,7 +318,7 @@ public class ChatBotPage : Frame {
         allChatHistory = new Dictionary<string, string>();
         chatHistory = new Dictionary<string, string>();
         title.render();
-        AnsiConsole.Write(new Text(this.translate(TranslationKeys.EXIT_TO_CLOSE_CHATBOT)) { Justification = Justify.Center });
+        AnsiConsole.Write(new Text(this.translate(Keys.EXIT_TO_CLOSE_CHATBOT)) { Justification = Justify.Center });
         AnsiConsole.WriteLine();
     }
 
@@ -351,7 +352,7 @@ public class ChatBotPage : Frame {
 
     private List<FileInfo> getChatHistory() {
         DirectoryInfo info = new DirectoryInfo(MultiToolSaving.chatHistoryDirectoryPath);
-        if (!info.Exists) { AnsiConsole.WriteLine(this.translate(TranslationKeys.NO_CHAT_SAVED_CHATBOT)); return new (); }
+        if (!info.Exists) { AnsiConsole.WriteLine(this.translate(Keys.NO_CHAT_SAVED_CHATBOT)); return new (); }
         return new List<FileInfo>(info.GetFiles());
     }
 
@@ -360,7 +361,7 @@ public class ChatBotPage : Frame {
             AnsiConsole.Prompt(new SelectionPrompt<FileInfo>()
                                    .AddChoices(getChatHistory())
                                    .UseConverter(file => file.Name)
-                                   .Title(askTitle ?? this.translate(TranslationKeys.ASK_SAVED_CHATBOT)));
+                                   .Title(askTitle ?? this.translate(Keys.ASK_SAVED_CHATBOT)));
         return (selected, selected.Name);
     }
     
@@ -369,7 +370,7 @@ public class ChatBotPage : Frame {
             AnsiConsole.Prompt(new MultiSelectionPrompt<FileInfo>()
                                    .AddChoices(getChatHistory())
                                    .UseConverter(file => file.Name)
-                                   .Title(askTitle ?? this.translate(TranslationKeys.ASK_MULTIPLE_SAVED_CHATBOT)));
+                                   .Title(askTitle ?? this.translate(Keys.ASK_MULTIPLE_SAVED_CHATBOT)));
         return (selected, selected.Select(file => file.Name).ToList());
     }
 }
